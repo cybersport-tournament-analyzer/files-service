@@ -1,5 +1,7 @@
 package com.gpoint.files_service.config.async;
 
+import com.gpoint.files_service.handler.AsyncExceptionHandler;
+import com.gpoint.files_service.property.AsyncProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;

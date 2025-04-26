@@ -1,8 +1,6 @@
 package com.gpoint.files_service.service.avatar.team;
 
-import com.gpoint.files_service.dto.FileDto;
 import com.gpoint.files_service.entity.File;
-import com.gpoint.files_service.mapper.FileMapper;
 import com.gpoint.files_service.mapper.avatar.TeamAvatarMapper;
 import com.gpoint.files_service.property.AmazonS3Properties;
 import com.gpoint.files_service.repository.TeamAvatarRepository;
@@ -24,7 +22,6 @@ import java.util.UUID;
 public class TeamAvatarService extends AbstractAvatarService {
 
     private final TeamAvatarRepository teamAvatarRepository;
-    private final FileMapper fileMapper;
     private final TeamAvatarMapper teamAvatarMapper;
     private final AvatarValidator avatarValidator;
 
@@ -32,33 +29,33 @@ public class TeamAvatarService extends AbstractAvatarService {
                              AmazonS3Service amazonS3Service,
                              TeamAvatarMapper teamAvatarMapper,
                              @Qualifier("teamAvatarValidator") AvatarValidator avatarValidator,
-                             TeamAvatarRepository teamAvatarRepository,
-                             FileMapper fileMapper) {
+                             TeamAvatarRepository teamAvatarRepository) {
         super(amazonS3Properties, amazonS3Service);
         this.teamAvatarMapper = teamAvatarMapper;
         this.avatarValidator = avatarValidator;
         this.teamAvatarRepository = teamAvatarRepository;
-        this.fileMapper = fileMapper;
     }
 
     @Override
     @Transactional
-    public FileDto saveAvatar(UUID id, MultipartFile file) {
+    public void saveAvatar(UUID id, MultipartFile file) {
 
         avatarValidator.validateAccess(id);
-        avatarValidator.validateExistence(id);
+
+        if(teamAvatarRepository.findByTeamId(id) != null) deleteAvatar(id);
 
         String path = buildPath(String.valueOf(id));
         String key = amazonS3Service.uploadFile(path, compressPic(file), getBucketName("team-avatar")).join();
-
         File s3File = buildFile(file, key);
-        teamAvatarRepository.save(teamAvatarMapper.toEntity(s3File, id));
 
-        return fileMapper.toDto(s3File);
+        teamAvatarRepository.save(teamAvatarMapper.toEntity(s3File, id));
+        log.info("Saved avatar to tournament id: {}", id);
     }
 
     @Override
     public Resource getAvatar(UUID id) {
+        if (teamAvatarRepository.findByTeamId(id) == null) return null;
+
         String key = teamAvatarRepository.findByTeamId(id).getKey();
         String path = buildPath(String.valueOf(id), key);
 
@@ -72,6 +69,8 @@ public class TeamAvatarService extends AbstractAvatarService {
         String key = teamAvatarRepository.findByTeamId(id).getKey();
         String path = buildPath(String.valueOf(id), key);
         amazonS3Service.deleteFile(path, getBucketName("team-avatar"));
+
+        teamAvatarRepository.delete(teamAvatarRepository.findByTeamId(id));
 
         log.info("Successfully deleted avatar from team with team id={}", id);
     }

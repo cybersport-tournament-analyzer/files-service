@@ -26,11 +26,4 @@ public class TeamAvatarValidator implements AvatarValidator {
 //        }
     }
 
-    @Override
-    public void validateExistence(UUID teamId) {
-
-        if (teamAvatarRepository.existsByTeamId(teamId)) {
-            throw new ValidationException("Team with teamId=" + teamId + " already has an avatar");
-        }
-    }
 }

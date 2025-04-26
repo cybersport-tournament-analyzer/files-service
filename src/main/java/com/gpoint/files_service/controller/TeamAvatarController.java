@@ -1,7 +1,6 @@
 package com.gpoint.files_service.controller;
 
 import com.gpoint.files_service.annotation.image.Image;
-import com.gpoint.files_service.dto.FileDto;
 import com.gpoint.files_service.service.avatar.AvatarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,9 +29,9 @@ public class TeamAvatarController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Upload team avatar")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public FileDto uploadTeamAvatar(@Image @RequestParam("file") MultipartFile file, @PathVariable String teamId) {
+    public void uploadTeamAvatar(@Image @RequestParam("file") MultipartFile file, @PathVariable String teamId) {
 
-        return avatarService.saveAvatar(UUID.fromString(teamId), file);
+        avatarService.saveAvatar(UUID.fromString(teamId), file);
     }
 
     @ResponseStatus(HttpStatus.OK)

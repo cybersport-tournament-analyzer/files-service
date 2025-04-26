@@ -14,4 +14,5 @@ public interface TeamAvatarRepository extends JpaRepository<TeamAvatar, UUID> {
     void deleteByKey(String key);
 
     boolean existsByTeamId(UUID teamId);
+
 }

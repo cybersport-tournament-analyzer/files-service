@@ -6,5 +6,4 @@ public interface AvatarValidator {
 
     void validateAccess(UUID id);
 
-    void validateExistence(UUID id);
 }

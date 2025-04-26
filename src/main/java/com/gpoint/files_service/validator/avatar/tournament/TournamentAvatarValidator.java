@@ -25,11 +25,4 @@ public class TournamentAvatarValidator implements AvatarValidator {
 //        }
     }
 
-    @Override
-    public void validateExistence(UUID teamId) {
-
-//        if (teamAvatarRepository.existsByUsername(username)) {
-//            throw new ValidationException("User with username=" + username + " already has an avatar");
-//        }
-    }
 }

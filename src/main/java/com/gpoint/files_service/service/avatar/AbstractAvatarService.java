@@ -50,9 +50,9 @@ public abstract class AbstractAvatarService implements AvatarService {
 
     protected final String getBucketName(String name) {
         return switch (name) {
-            case "team-avatar": yield "team-avatar-bucket";
-            case "tournament-avatar": yield "tournament-avatar-bucket";
-            case "tournament-banner": yield "tournament-banner-bucket";
+            case "team-avatar": yield "team-avatar";
+            case "tournament-avatar": yield "tournament-avatar";
+            case "tournament-banner": yield "tournament-banner";
             default:
                 throw new IllegalStateException("Unexpected value: " + name);
         };

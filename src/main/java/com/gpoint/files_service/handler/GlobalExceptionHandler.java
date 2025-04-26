@@ -2,6 +2,7 @@ package com.gpoint.files_service.handler;
 import com.gpoint.files_service.exception.EntityNotFoundException;
 import com.gpoint.files_service.exception.S3Exception;
 import com.gpoint.files_service.exception.ValidationException;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
+@Hidden
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
